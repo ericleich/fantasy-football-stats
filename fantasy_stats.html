@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+
+let TEAMS = {
+  "2020": [
+    {
+      "id": 1,
+      "name": "4th and 2020",
+      "owner": "Matt",
+      "scores": [96.54, 131.38, 127.7, 114.34, 99.2, 84.3, 129.8, 115.94, 104.48, 86.28, 101.72, 130.28],
+    },
+    {
+      "id": 2,
+      "name": "You're Awful Murray",
+      "owner": "Harrison",
+      "scores": [129.3, 163.74, 120.3, 105.32, 130.2, 119.62, 154.2, 84.14, 106.02, 135.2, 140.62, 87.0],
+    },
+    {
+      "id": 3,
+      "name": "Colonel Miles Sanders",
+      "owner": "Adam",
+      "scores": [158.88, 157.22, 122.0, 121.9, 124.48, 111.02, 102.42, 152.54, 137.4, 106.72, 138.58, 111.6],
+    },
+    {
+      "id": 4,
+      "name": "Saquon's Steak House",
+      "owner": "Jason",
+      "scores": [91.62, 109.3, 114.08, 97.8, 128.76, 90.88, 135.46, 79.32, 117.84, 82.22, 132.48, 139.92],
+    },
+    {
+      "id": 5,
+      "name": "Techno Gatsby",
+      "owner": "Bilal",
+      "scores": [140.7, 143.3, 137.98, 148.58, 96.54, 133.88, 92.1, 123.42, 95.72, 99.58, 86.04, 121.58],
+    },
+    {
+      "id": 6,
+      "name": "Fresh Prince of Helaire",
+      "owner": "Jesse",
+      "scores": [134.86, 113.52, 91.72, 83.2, 113.04, 106.04, 112.72, 74.36, 92.26, 105.92, 93.68, 72.2],
+    },
+    {
+      "id": 7,
+      "name": "No Last Name No Problem",
+      "owner": "Eric",
+      "scores": [117.7, 111.46, 116.68, 116.12, 135.6, 128.44, 131.68, 119.82, 109.1, 84.96, 110.34, 157.08],
+    },
+    {
+      "id": 8,
+      "name": "Eternal Optimist",
+      "owner": "Lee",
+      "scores": [100.06, 113.58, 146.8, 103.74, 103.96, 58.54, 98.76, 126.16, 96.16, 119.74, 100.14, 103.9],
+    },
+  ],
+  "2021": [
+    {
+      "id": 1,
+      "name": "4th and 2020",
+      "owner": "Matt",
+      "scores": [84.4, 151.26, 102.08, 133.94, 160.98, 140.38, 136.38],
+    },
+    {
+      "id": 2,
+      "name": "You're Awful Murray",
+      "owner": "Harrison",
+      "scores": [110.2, 110.64, 127.48, 109.46, 143.54, 136.08, 97.26],
+    },
+    {
+      "id": 3,
+      "name": "Hurts So Good",
+      "owner": "Adam",
+      "scores": [111.48, 120.22, 149.54, 74.68, 177.72, 102.1, 167.04],
+    },
+    {
+      "id": 4,
+      "name": "Dr. Teeth + The Electric Mayhem",
+      "owner": "Jason",
+      "scores": [135.06, 110.3, 133.14, 97.72, 159.46, 103.16, 126.74],
+    },
+    {
+      "id": 5,
+      "name": "The Promise",
+      "owner": "Bilal",
+      "scores": [114.62, 119.18, 117.82, 89.32, 124.88, 164.9, 113.46],
+    },
+    {
+      "id": 6,
+      "name": "Triple Burger Extra Ketchup",
+      "owner": "Jesse",
+      "scores": [144.88, 105.32, 126.1, 134.12, 128.28, 126.78, 85.84],
+    },
+    {
+      "id": 7,
+      "name": "No Last Name No Problem",
+      "owner": "Eric",
+      "scores": [137.0, 125.26, 113.72, 109.42, 105.9, 133.42, 83.0],
+    },
+    {
+      "id": 8,
+      "name": "Eternal Optimist",
+      "owner": "Lee",
+      "scores": [127.36, 122.12, 102.02, 139.08, 96.52, 103.3, 99.44],
+    },
+  ]
+};
+
+let SCHEDULE = {
+  "2020": {
+    "1": [[1, 2], [3, 4], [5, 6], [7, 8]],
+    "2": [[3, 1], [2, 5], [4, 7], [6, 8]],
+    "3": [[1, 5], [7, 3], [8, 2], [6, 4]],
+    "4": [[7, 1], [5, 8], [3, 6], [2, 4]],
+    "5": [[1, 8], [6, 7], [4, 5], [2, 3]],
+    "6": [[6, 1], [8, 4], [7, 2], [5, 3]],
+    "7": [[1, 4], [2, 6], [3, 8], [5, 7]],
+    "8": [[2, 1], [4, 3], [6, 5], [8, 7]],
+    "9": [[1, 3], [5, 2], [7, 4], [8, 6]],
+    "10": [[5, 1], [3, 7], [2, 8], [4, 6]],
+    "11": [[1, 7], [8, 5], [6, 3], [4, 2]],
+    "12": [[8, 1], [7, 6], [5, 4], [3, 2]]
+  },
+  "2021": {
+    "1": [[5, 6], [7, 3], [2, 8], [1, 4]],
+    "2": [[7, 5], [6, 2], [3, 1], [8, 4]],
+    "3": [[5, 2], [1, 7], [4, 6], [8, 3]],
+    "4": [[1, 5], [2, 4], [7, 8], [6, 3]],
+    "5": [[5, 4], [8, 1], [3, 2], [6, 7]],
+    "6": [[8, 5], [4, 3], [1, 6], [2, 7]],
+    "7": [[5, 3], [6, 8], [7, 4], [2, 1]]
+  }
+};
+
+var globalYear = 2021;
+
+function init(year) {
+  globalYear = year;
+  let teams = TEAMS[year];
+  let schedule = SCHEDULE[year];
+  let league = League.createFromJson(teams, schedule);
+  // for (var weekNumber in SCHEDULE) {
+  //   league.printResults(weekNumber);
+  // }
+  league.printRecords();
+  league.printBreakdown();
+
+  // Init UI.
+  let standingsDiv = document.getElementById("standings");
+  standingsDiv.innerHTML = getStandingsTableHtml(league);
+
+  let breakdownDiv = document.getElementById("breakdown");
+  breakdownDiv.innerHTML = getBreakdownTablesHtml(league);
+
+  var selectInnerHTML = "";
+  teams.forEach(team => {
+    selectInnerHTML += "<option value='" + team.id + "'>" + team.name + "</option>";
+  });
+  document.getElementById("team1swap").innerHTML = selectInnerHTML;
+  document.getElementById("team2swap").innerHTML = selectInnerHTML;
+  document.getElementById("swappedStandings").innerHTML = "";
+}
+
+function swapTeams() {
+  let team1Value = document.getElementById("team1swap").value;
+  let team2Value = document.getElementById("team2swap").value;
+  // Make deep copy.
+  let teams = JSON.parse(JSON.stringify(TEAMS[globalYear]));
+  teams[team1Value-1].id = team2Value;
+  teams[team2Value-1].id = team1Value;
+
+  let league = League.createFromJson(teams, SCHEDULE[globalYear]);
+  let swappedStandingsDiv = document.getElementById("swappedStandings");
+  swappedStandingsDiv.innerHTML = getStandingsTableHtml(league);
+
+
+  console.log("swapping: " + team1Value + " with " + team2Value);
+}
+
+function getStandingsTableHtml(league) {
+  var html = "<table border='1'><tr><th>Rank</th><th>Team</th><th>Record</th><th>Points</th></tr>";
+  var teams = Object.values(league.teams);
+  teams.sort((team1, team2) => {
+    if (team1.record.getWinCount() > team2.record.getWinCount()) {
+      return -1;
+    } else if (team2.record.getWinCount() > team1.record.getWinCount()) {
+      return 1;
+    }
+    return team2.getTotalScore() - team1.getTotalScore();
+  });
+  var rank = 1;
+  teams.forEach(team => {
+    html += "<tr><td>" + rank++ + "</td><td>" + team.name + "</td><td>" + team.record.toString() + "</td><td>" + team.getTotalScore() + "</td></tr>";
+  });
+  html += "</table>";
+  return html;
+}
+
+function getBreakdownTablesHtml(league) {
+  var finalHtml = "";
+  for (const [teamId, breakdown] of Object.entries(league.breakdown)) {
+    var team = league.getTeam(teamId);
+    var totalBreakdownRecord = new Record();
+    var html = "<table width=400 border='1'><tr><th colspan='3'>" + team.name + "</th></tr>";
+    html += "<tr><th>VS.</th><th>PLAYED</th><th>ALL</th></tr>";
+    for (const [opponentTeamId, records] of Object.entries(breakdown)) {
+      html += "<tr><td>" + league.getTeamName(opponentTeamId) +
+          "</td><td>" + records.played.toString() +
+          "</td><td>" + records.all.toString() + "</td></tr>";
+          totalBreakdownRecord.add(records.all);
+    }
+    html += "<tr><th>Total" +
+          "</th><th>" + team.record.toString() +
+          "</th><th>" + totalBreakdownRecord.toString() + "</th></tr>";
+    html += "</table>"
+    finalHtml += html;
+  }
+  return finalHtml;
+}
+
+class League {
+  constructor(teams, weeks) {
+    // Dictionary(teamId -> Team)
+    this.teams = teams;
+    // Dictionary(weekNumber -> Week)
+    this.weeks = weeks;
+    // Dictionary(teamId -> Dictionary(teamId -> Record))
+    this.breakdown = {};
+
+    this.calculateBreakdown();
+    this.calculateRecords();
+  }
+
+  static createFromJson(teamsJson, scheduleJson) {
+    var teams = {};
+    for (var index in teamsJson) {
+      let teamJson = teamsJson[index];
+      let team = new Team(teamJson.id, teamJson.name, teamJson.scores);
+      teams[teamJson.id] = team;
+    }
+
+    let weeks = {};
+    for (var weekNumber in scheduleJson) {
+      let week = new Week(weekNumber, scheduleJson[weekNumber]);
+      weeks[weekNumber] = week;
+    }
+    return new League(teams, weeks);
+  }
+
+  getTeam(teamId) {
+    return this.teams[teamId];
+  }
+
+  getTeamName(teamId) {
+    return this.getTeam(teamId).name;
+  }
+
+  calculateRecords() {
+    for (const [weekNumber, week] of Object.entries(this.weeks)) {
+      for (var matchupIndex in week.matchups) {
+        let matchup = week.matchups[matchupIndex];
+        let team1 = this.getTeam(matchup.teamId1);
+        let team2 = this.getTeam(matchup.teamId2);
+        let score1 = team1.getScore(week.number);
+        let score2 = team2.getScore(week.number);
+        console.log("Week #" + week.number);
+        if (score1 > score2) {
+          console.log(team1.name + " (" + score1 + ") beats " + team2.name + "(" + score2 + ")");
+          team1.record.wins++;
+          team2.record.losses++;
+        } else if (score1 == score2) {
+          console.log(team1.name + " (" + score1 + ") tied " + team2.name + "(" + score2 + ")");
+          team1.record.ties++;
+          team2.record.ties++;
+        } else {
+          console.log(team1.name + " (" + score1 + ") lost to " + team2.name + "(" + score2 + ")");
+          team1.record.losses++;
+          team2.record.wins++;
+        }
+      }
+    }
+  }
+
+  /*
+  {
+    "<id>": {
+      "<opponentId>": {
+        "played": <Record>,
+        "all": <Record>,
+      }
+    }
+  }
+  */
+  calculateBreakdown() {
+    var leagueBreakdown = {};
+    Object.values(this.teams).forEach(team => {
+      var teamBreakdown = {};
+      console.log('test');
+      for (const [weekNumber, week] of Object.entries(this.weeks)) {
+        Object.values(this.teams).forEach(otherTeam => {
+          if (otherTeam.id === team.id) {
+            return;
+          }
+          if (!teamBreakdown[otherTeam.id]) {
+            teamBreakdown[otherTeam.id] = {
+              "played": new Record(),
+              "all": new Record()
+            };
+          }
+          let score = team.getScore(weekNumber);
+          let otherTeamScore = otherTeam.getScore(weekNumber);
+          let isOpponent = (week.getOpponent(team.id) == otherTeam.id);
+          if (score > otherTeamScore) {
+            teamBreakdown[otherTeam.id].all.wins++;
+            if (isOpponent) teamBreakdown[otherTeam.id].played.wins++;
+          } else if (score == otherTeamScore) {
+            teamBreakdown[otherTeam.id].all.ties++;
+            if (isOpponent) teamBreakdown[otherTeam.id].played.ties++;
+          } else {
+            teamBreakdown[otherTeam.id].all.losses++;
+            if (isOpponent) teamBreakdown[otherTeam.id].played.losses++;
+          }
+        });
+      }
+      leagueBreakdown[team.id] = teamBreakdown;
+    });
+    this.breakdown = leagueBreakdown;
+  }
+
+  printRecords() {
+    for (var teamIndex in this.teams) {
+      let team = this.teams[teamIndex];
+      console.log(team.toString());
+    }
+  }
+
+  printBreakdown() {
+    console.log("Breakdown is: " + this.breakdown);
+  }
+}
+
+class Matchup {
+  constructor(teamId1, teamId2) {
+    this.teamId1 = teamId1;
+    this.teamId2 = teamId2;
+  }
+}
+
+class Team {
+  constructor(id, name, scores) {
+    this.id = id;
+    this.name = name;
+    this.scores = scores;
+    this.record = new Record();
+  }
+
+  getTotalScore() {
+    var totalScore = 0;
+    for (var index in this.scores) {
+      totalScore += this.scores[index];
+    }
+    // Round to 2 decimal places.
+    return Math.round((totalScore + Number.EPSILON) * 100) / 100
+    //return totalScore;
+  }
+
+  getScore(weekNumber) {
+    // Array is 0-indexed
+    return this.scores[weekNumber - 1];
+  }
+
+  toString() {
+    return this.name + " is team ID #" + this.id + " and has total score of " + this.getTotalScore() + " with record " + this.record.toString();
+  }
+}
+
+class Record {
+  constructor() {
+    this.wins = 0;
+    this.losses = 0;
+    this.ties = 0;
+  }
+
+  getWinCount() {
+    return this.wins + this.ties / 2;
+  }
+
+  add(record) {
+    this.wins += record.wins;
+    this.ties += record.ties;
+    this.losses += record.losses;
+  }
+
+  toString() {
+    return this.wins + "-" + this.losses + "-" + this.ties;
+  }
+}
+
+class Week {
+  constructor(number, matchupsArray) {
+    this.number = number;
+    this.matchups = [];
+    this.opponents = {};
+    for (var index in matchupsArray) {
+      let matchup = matchupsArray[index];
+
+      let teamId1 = matchup[0];
+      let teamId2 = matchup[1];
+
+      // Set up array of matchups objects.
+      this.matchups.push(new Matchup(teamId1, teamId2));
+
+      // Create a map with each team's opponent.
+      this.opponents[teamId1] = teamId2;
+      this.opponents[teamId2] = teamId1;
+    }
+  }
+
+  getOpponent(teamId) {
+    return this.opponents[teamId];
+  }
+}
+
+function changeYear() {
+  let year = document.getElementById("yearSelect").value;
+  document.getElementById("year").innerHTML = year;
+  if (year != globalYear) {
+
+    init(year);
+  }
+}
+
+
+</script>
+</head>
+<body onload="init(globalYear)">
+  <h1>Trail of Tears Club Fantasy Stats - <div id="year">2021</div></h1>
+  View year: <select name="yearSelect" id="yearSelect">
+    <option value="2020">2020</option>
+    <option value="2021">2021</option>
+  </select>
+  <button onclick="changeYear()">Go!</button>
+  <h2>Main Standings</h2>
+  <div id="standings"></div>
+  <h2>Breakdown</h2>
+  <div id="breakdown"></div>
+  <h2>Team Swap</h2>
+  <p>What would have happened if these 2 teams swapped schedules?</p>
+  <span>Swap
+    <select name="team1swap" id="team1swap"></select>
+    with 
+    <select name="team2swap" id="team2swap"></select>
+  </span>
+  <button id="swap" onclick="swapTeams(globalYear)">Recalculate!</button>
+  <div id="swappedStandings"></div>
+</body>
+</html>
