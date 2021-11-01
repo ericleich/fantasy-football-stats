@@ -4,6 +4,56 @@
 <script>
 
 let TEAMS = {
+  "2019": [
+    {
+      "id": 1,
+      "name": "Out of Luck",
+      "owner": "Matt",
+      "scores": [116.72, 105.44, 106.86, 95.0, 103.76, 86.34, 109.94, 135.62, 92.26, 90.68, 124.22, 102.24, 79.56],
+    },
+    {
+      "id": 2,
+      "name": "5 Carries 3 TDs 1 Yard",
+      "owner": "Harrison",
+      "scores": [98.46, 119.32, 110.82, 120.94, 139.32, 144.4, 109.46, 117.2, 122.16, 120.36, 125.2, 90.96, 101.12],
+    },
+    {
+      "id": 4,
+      "name": "Disco Strangler",
+      "owner": "Jason",
+      "scores": [102.92, 99.36, 153.58, 128.78, 113.34, 117.4, 124.72, 147.96, 123.34, 128.12, 142.78, 122.66, 95.5],
+    },
+    {
+      "id": 5,
+      "name": "Techno Gatsby",
+      "owner": "Bilal",
+      "scores": [101.66, 110.42, 116.74, 111.3, 159.52, 131.4, 81.34, 79.88, 133.32, 97.92, 97.78, 140.8, 80.8],
+    },
+    {
+      "id": 6,
+      "name": "Guess Whos Back Back Again",
+      "owner": "Jesse",
+      "scores": [108.58, 98.8, 109.22, 100.5, 136.94, 69.72, 105.72, 158.58, 117.4, 67.62, 80.06, 71.48, 116.54],
+    },
+    {
+      "id": 7,
+      "name": "Sherlock Mahomes",
+      "owner": "Eric",
+      "scores": [147.22, 118.92, 157.66, 100.8, 101.36, 120.22, 69.44, 119.26, 116.5, 127.64, 115.68, 108.4, 105.3],
+    },
+    {
+      "id": 8,
+      "name": "Eternal Optimist",
+      "owner": "Lee",
+      "scores": [122.8, 123.56, 150.84, 101.52, 140.62, 91.42, 106.76, 142.38, 113.94, 167.22, 96.26, 139.52, 99.92],
+    },
+    {
+      "id": 9,
+      "name": "Clive Dancer",
+      "owner": "Mike",
+      "scores": [140.06, 88.1, 112.04, 79.4, 148.72, 135.76, 55.06, 71.56, 84.8, 96.68, 95.14, 62.64, 80.18],
+    },
+  ],
   "2020": [
     {
       "id": 1,
@@ -107,6 +157,21 @@ let TEAMS = {
 };
 
 let SCHEDULE = {
+  "2019": {
+    "1": [[4, 8], [2, 6], [9, 1], [5, 7]],
+    "2": [[2, 4], [8, 9], [6, 5], [1, 7]],
+    "3": [[4, 9], [5, 2], [7, 8], [1, 6]],
+    "4": [[5, 4], [9, 7], [2, 1], [8, 6]],
+    "5": [[4, 7], [1, 5], [6, 9], [8, 2]],
+    "6": [[1, 4], [7, 6], [5, 8], [9, 2]],
+    "7": [[4, 6], [8, 1], [2, 7], [9, 5]],
+    "8": [[8, 4], [6, 2], [1, 9], [7, 5]],
+    "9": [[4, 2], [9, 8], [5, 6], [7, 1]],
+    "10": [[9, 4], [2, 5], [8, 7], [6, 1]],
+    "11": [[4, 5], [7, 9], [1, 2], [6, 8]],
+    "12": [[7, 4], [5, 1], [9, 6], [2, 8]],
+    "13": [[4, 1], [6, 7], [8, 5], [2, 9]]
+  },
   "2020": {
     "1": [[1, 2], [3, 4], [5, 6], [7, 8]],
     "2": [[3, 1], [2, 5], [4, 7], [6, 8]],
@@ -166,8 +231,14 @@ function swapTeams() {
   let team2Value = document.getElementById("team2swap").value;
   // Make deep copy.
   let teams = JSON.parse(JSON.stringify(TEAMS[globalYear]));
-  teams[team1Value-1].id = team2Value;
-  teams[team2Value-1].id = team1Value;
+  // Swap team IDs.
+  teams.forEach(team => {
+    if (team.id == team1Value) {
+      team.id = team2Value;
+    } else if (team.id == team2Value) {
+      team.id = team1Value;
+    }
+  });
 
   let league = League.createFromJson(teams, SCHEDULE[globalYear]);
   let swappedStandingsDiv = document.getElementById("swappedStandings");
@@ -436,6 +507,7 @@ function changeYear() {
 <body onload="init(globalYear)">
   <h1>Trail of Tears Club Fantasy Stats - <div id="year">2021</div></h1>
   View year: <select name="yearSelect" id="yearSelect">
+    <option value="2019">2019</option>
     <option value="2020">2020</option>
     <option value="2021">2021</option>
   </select>
