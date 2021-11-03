@@ -240,6 +240,70 @@ class Team {
   }
 }
 
+class League {
+  constructor(seasons) {
+    // Dictionary(year -> Season)
+    this.seasons = seasons;
+    /*
+    {
+      "<id>": {
+        "<opponentId>": {
+          "played": <Record>,
+          "all": <Record>,
+        },
+        ...
+      },
+      ...
+    }
+    */
+    this.breakdown = this.calculateAllTimeBreakdown();
+
+    // Dictionary(ownerId -> Record)
+    this.records = this.calculateRecords();
+  }
+
+  calculateRecords() {
+    var overallRecords = {};
+    Object.keys(OWNERS).forEach(ownerId => {
+      overallRecords[ownerId] = new Record();
+    });
+    for (const [year, season] of Object.entries(this.seasons)) {
+      for (const [ownerId, record] of Object.entries(season.records)) {
+        overallRecords[ownerId].add(record);
+      }
+    }
+    return overallRecords;
+  }
+
+  calculateAllTimeBreakdown() {
+    // Initialize breakdown.
+    let overallBreakdown = {};
+    Object.keys(OWNERS).forEach(ownerId => {
+      overallBreakdown[ownerId] = {};
+      Object.keys(OWNERS).forEach(opponentOwnerId => {
+        overallBreakdown[ownerId][opponentOwnerId] = {
+          "played": new Record(),
+          "all": new Record()
+        };
+      });
+    });
+
+    // Populate breakdown.
+    for (const [year, season] of Object.entries(this.seasons)) {
+      for (const [ownerId, opponentsBreakdown] of Object.entries(season.breakdown)) {
+        for (const [opponentOwnerId, recordsJson] of Object.entries(opponentsBreakdown)) {
+          if (ownerId == opponentOwnerId) {
+            continue;
+          }
+          overallBreakdown[ownerId][opponentOwnerId].played.add(recordsJson.played);
+          overallBreakdown[ownerId][opponentOwnerId].all.add(recordsJson.all);
+        }
+      }
+    }
+    return overallBreakdown;
+  }
+}
+
 class Season {
   constructor(year, teams, schedule) {
     // int
@@ -367,10 +431,10 @@ class Record {
     return this.wins + this.ties / 2;
   }
 
-  add(record) {
-    this.wins += record.wins;
-    this.ties += record.ties;
-    this.losses += record.losses;
+  add(otherRecord) {
+    this.wins += otherRecord.wins;
+    this.ties += otherRecord.ties;
+    this.losses += otherRecord.losses;
   }
 
   toString() {
@@ -447,10 +511,16 @@ function createSeason(year, optionalSchedule) {
 var globalYear = 2021;
 
 function init(year) {
-    globalYear = year;
+  globalYear = year;
   let season = createSeason(year);
   season.printRecords();
   season.printBreakdown();
+
+  let seasons = {};
+  [2019, 2020, 2021].forEach(year => {
+    seasons[year] = createSeason(year);
+  });
+  let league = new League(seasons);
 
   // Init UI.
   let standingsDiv = document.getElementById("standings");
@@ -556,7 +626,7 @@ function changeYear() {
   View year: <select name="yearSelect" id="yearSelect">
     <option value="2019">2019</option>
     <option value="2020">2020</option>
-    <option value="2021">2021</option>
+    <option value="2021" selected="selected">2021</option>
   </select>
   <button onclick="changeYear()">Go!</button>
   <h2>Main Standings</h2>
