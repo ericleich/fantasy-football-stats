@@ -190,18 +190,14 @@ class Owner {
   constructor(id, name, teams) {
     this.id = id;
     this.name = name;
-    this.teams = teams; // Team
+    this.teams = teams; // Dictionary<year, Team>
   }
 
   toString() {
     var str = "Owner ID #" + this.id + " is " + this.name + ".";
-    var teamArray = Object.values(this.teams);
-    teamYearsArray.sort((team1, team2) => {
-      return team2.year - team1.year;
-    });
-     teams.forEach(team => {
+    for (const [year, team] of Object.entries(this.teams)) {
       str += " " + team.toString();
-    });
+    }
     return str;
   }
 
@@ -211,25 +207,6 @@ class Owner {
 }
 
 class Team {
-  constructor(owner, teamYears) {
-    this.owner = owner;
-    this.years = teamYears;
-  }
-
-  toString() {
-    var str = "Team ID #" + this.owner.id + " is " + this.owner + ".";
-    var teamYearsArray = Object.values(this.years);
-    teamYearsArray.sort((teamYear1, teamYear2) => {
-      return teamYear2 - teamYear1;
-    });
-     teamYearsArray.forEach(teamYear => {
-      str += " " + teamYear.toString();
-    });
-    return str;
-  }
-}
-
-class TeamYear {
   constructor(ownerId, year, name, scores) {
     this.ownerId = ownerId;
     this.year = year;
@@ -259,16 +236,13 @@ class TeamYear {
 
 function createOwners() {
   let owners = {};
-  for (const [ownerId, ownerName] of Object.entries(OWNERS)) {
-    owners[ownerId] = new Owner(ownerId, ownerName);
-  }
-  for (const [ownerId, teamsJson] of Object.entries(TEAMS)) {
 
-    let teamYears = {};
-    for (const [year, teamJson] of Object.entries(teamsJson)) {
-      teamYears[year] = new TeamYear(ownerId, year, teamJson.name, teamJson.scores);
+  for (const [ownerId, ownerTeamsJson] of Object.entries(TEAMS)) {
+    let ownerTeams = {};
+    for (const [year, teamJson] of Object.entries(ownerTeamsJson)) {
+      ownerTeams[year] = new Team(ownerId, year, teamJson.name, teamJson.scores);
     }
-    owners[ownerId] = new Owner(ownerId, OWNERS[ownerId], teamYears);
+    owners[ownerId] = new Owner(ownerId, OWNERS[ownerId], ownerTeams);
   }
   return owners;
 }
@@ -305,7 +279,7 @@ class LeagueYear {
   constructor(year, teams, schedule) {
     // int
     this.year = year;
-    // Dictionary(ownerId -> TeamYear)
+    // Dictionary(ownerId -> Team)
     this.teams = teams;
     // Dictionary(weekNumber -> Week)
     this.schedule = schedule;
@@ -321,10 +295,6 @@ class LeagueYear {
   getTeam(ownerId) {
     return this.teams[ownerId];
   }
-
-  // getTeamName(teamId) {
-  //   return this.getTeam(teamId).name;
-  // }
 
   calculateRecords() {
     Object.keys(this.teams).forEach(ownerId => {
