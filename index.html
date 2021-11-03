@@ -265,17 +265,16 @@ function createSchedule(year) {
   return schedule;
 }
 
-function createLeague(year, optionalSchedule) {
+function createSeason(year, optionalSchedule) {
   let owners = createOwners();
   let teams = createTeams(year, owners);
 
   let schedule = optionalSchedule || createSchedule(year);
 
-  let league = new LeagueYear(year, teams, schedule);
-  return league;
+  return new Season(year, teams, schedule);
 }
 
-class LeagueYear {
+class Season {
   constructor(year, teams, schedule) {
     // int
     this.year = year;
@@ -335,7 +334,7 @@ class LeagueYear {
   }
   */
   calculateBreakdown() {
-    let leagueBreakdown = {};
+    let seasonBreakdown = {};
     Object.values(this.teams).forEach(team => {
       let teamBreakdown = {};
       for (const [weekNumber, week] of Object.entries(this.schedule)) {
@@ -364,9 +363,9 @@ class LeagueYear {
           }
         });
       }
-      leagueBreakdown[team.ownerId] = teamBreakdown;
+      seasonBreakdown[team.ownerId] = teamBreakdown;
     });
-    this.breakdown = leagueBreakdown;
+    this.breakdown = seasonBreakdown;
   }
 
   printRecords() {
@@ -385,16 +384,16 @@ var globalYear = 2021;
 
 function init(year) {
     globalYear = year;
-  let league = createLeague(year);
-  league.printRecords();
-  league.printBreakdown();
+  let season = createSeason(year);
+  season.printRecords();
+  season.printBreakdown();
 
   // Init UI.
   let standingsDiv = document.getElementById("standings");
-  standingsDiv.innerHTML = getStandingsTableHtml(league);
+  standingsDiv.innerHTML = getStandingsTableHtml(season);
 
   let breakdownDiv = document.getElementById("breakdown");
-  breakdownDiv.innerHTML = getBreakdownTablesHtml(league);
+  breakdownDiv.innerHTML = getBreakdownTablesHtml(season);
 
   var selectInnerHTML = "";
   SCHEDULES[year].owners.forEach(ownerId => {
@@ -428,9 +427,9 @@ function swapTeams() {
     });
   }
 
-  let league = createLeague(globalYear, schedule);
+  let season = createSeason(globalYear, schedule);
   let swappedStandingsDiv = document.getElementById("swappedStandings");
-  swappedStandingsDiv.innerHTML = getStandingsTableHtml(league);
+  swappedStandingsDiv.innerHTML = getStandingsTableHtml(season);
 
 
   console.log("swapping: " + team1Value + " with " + team2Value);
@@ -438,40 +437,40 @@ function swapTeams() {
 
 
 
-function getStandingsTableHtml(league) {
+function getStandingsTableHtml(season) {
   var html = "<table border='1'><tr><th>Rank</th><th>Team</th><th>Record</th><th>Points</th></tr>";
-  var teams = Object.values(league.teams);
+  var teams = Object.values(season.teams);
   teams.sort((team1, team2) => {
-    if (league.records[team1.ownerId].getWinCount() > league.records[team2.ownerId].getWinCount()) {
+    if (season.records[team1.ownerId].getWinCount() > season.records[team2.ownerId].getWinCount()) {
       return -1;
-    } else if (league.records[team2.ownerId].getWinCount() > league.records[team1.ownerId].getWinCount()) {
+    } else if (season.records[team2.ownerId].getWinCount() > season.records[team1.ownerId].getWinCount()) {
       return 1;
     }
     return team2.getTotalScore() - team1.getTotalScore();
   });
   var rank = 1;
   teams.forEach(team => {
-    html += "<tr><td>" + rank++ + "</td><td>" + team.name + "</td><td>" + league.records[team.ownerId].toString() + "</td><td>" + team.getTotalScore() + "</td></tr>";
+    html += "<tr><td>" + rank++ + "</td><td>" + team.name + "</td><td>" + season.records[team.ownerId].toString() + "</td><td>" + team.getTotalScore() + "</td></tr>";
   });
   html += "</table>";
   return html;
 }
 
-function getBreakdownTablesHtml(league) {
+function getBreakdownTablesHtml(season) {
   var finalHtml = "";
-  for (const [ownerId, breakdown] of Object.entries(league.breakdown)) {
-    var team = league.getTeam(ownerId);
+  for (const [ownerId, breakdown] of Object.entries(season.breakdown)) {
+    var team = season.getTeam(ownerId);
     var totalBreakdownRecord = new Record();
     var html = "<table width=400 border='1'><tr><th colspan='3'>" + team.name + "</th></tr>";
     html += "<tr><th>VS.</th><th>PLAYED</th><th>ALL</th></tr>";
     for (const [opponentOwnerId, records] of Object.entries(breakdown)) {
-      html += "<tr><td>" + league.getTeam(opponentOwnerId).name +
+      html += "<tr><td>" + season.getTeam(opponentOwnerId).name +
           "</td><td>" + records.played.toString() +
           "</td><td>" + records.all.toString() + "</td></tr>";
           totalBreakdownRecord.add(records.all);
     }
     html += "<tr><th>Total" +
-          "</th><th>" + league.records[ownerId].toString() +
+          "</th><th>" + season.records[ownerId].toString() +
           "</th><th>" + totalBreakdownRecord.toString() + "</th></tr>";
     html += "</table>"
     finalHtml += html;
