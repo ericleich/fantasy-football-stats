@@ -437,6 +437,12 @@ class Record {
     this.losses += otherRecord.losses;
   }
 
+  getPercentage() {
+    let percentage = (this.wins + this.ties / 2) / (this.wins + this.losses + this.ties) * 100;
+    // Round to 2 decimal places.
+    return Math.round((percentage + Number.EPSILON) * 100) / 100;
+  }
+
   toString() {
     return this.wins + "-" + this.losses + "-" + this.ties;
   }
@@ -508,34 +514,25 @@ function createSeason(year, optionalSchedule) {
   return new Season(year, teams, schedule);
 }
 
-var globalYear = 2021;
+var globalYear;
+var globalLeague;
 
-function init(year) {
-  globalYear = year;
-  let season = createSeason(year);
-  season.printRecords();
-  season.printBreakdown();
+function init() {
+  // globalYear = year;
+  // let season = createSeason(year);
+  // season.printRecords();
+  // season.printBreakdown();
 
+  // Init seasons.
   let seasons = {};
   [2019, 2020, 2021].forEach(year => {
     seasons[year] = createSeason(year);
   });
   let league = new League(seasons);
+  globalLeague = league;
 
   // Init UI.
-  let standingsDiv = document.getElementById("standings");
-  standingsDiv.innerHTML = getStandingsTableHtml(season);
-
-  let breakdownDiv = document.getElementById("breakdown");
-  breakdownDiv.innerHTML = getBreakdownTablesHtml(season);
-
-  var selectInnerHTML = "";
-  SCHEDULES[year].owners.forEach(ownerId => {
-    selectInnerHTML += "<option value='" + ownerId + "'>" + TEAMS[ownerId][year].name + "</option>";
-  });
-  document.getElementById("team1swap").innerHTML = selectInnerHTML;
-  document.getElementById("team2swap").innerHTML = selectInnerHTML;
-  document.getElementById("swappedStandings").innerHTML = "";
+  changeYear();
 }
 
 function swapTeams() {
@@ -567,6 +564,16 @@ function swapTeams() {
 
 
   console.log("swapping: " + team1Value + " with " + team2Value);
+}
+
+function getAllTimeStandingsTableHtml(league) {
+  var html = "<table border='1'><tr><th>Rank</th><th>Team</th><th>Record</th><th>Winning Percentage</th></tr>";
+  var rank = 1;
+  for (const [ownerId, record] of Object.entries(league.records)) {
+    html += "<tr><td>" + rank++ + "</td><td>" + OWNERS[ownerId] + "</td><td>" + record.toString() + "</td><td>" +  record.getPercentage() + "</td></tr>";
+  }
+  html += "</table>";
+  return html;
 }
 
 function getStandingsTableHtml(season) {
@@ -612,21 +619,58 @@ function getBreakdownTablesHtml(season) {
 
 function changeYear() {
   let year = document.getElementById("yearSelect").value;
-  document.getElementById("year").innerHTML = year;
-  if (year != globalYear) {
-    init(year);
+  let yearText = document.getElementById("yearSelect").selectedOptions[0].innerHTML;
+  if (year == globalYear) {
+    // No change.
+    return;
+  }
+  globalYear = year;
+  document.getElementById("year").innerHTML = yearText;
+  if (year == 0) {
+    // All time stats.
+    // Init UI.
+    let standingsDiv = document.getElementById("standings");
+    standingsDiv.innerHTML = getAllTimeStandingsTableHtml(globalLeague);
+
+    let breakdownDiv = document.getElementById("breakdown");
+    breakdownDiv.innerHTML = "Not yet implemented for all time stats. Stay tuned!";
+
+    // Hide schedule swap. Doesn't make sense for all time.
+    var swapSection = document.getElementById("swapSection");
+    swapSection.style.display = "none";
+  } else {
+    let season = globalLeague.seasons[globalYear];
+    let standingsDiv = document.getElementById("standings");
+    standingsDiv.innerHTML = getStandingsTableHtml(season);
+
+    let breakdownDiv = document.getElementById("breakdown");
+    breakdownDiv.innerHTML = getBreakdownTablesHtml(season);
+
+    // Show swap teams section.
+    var swapSection = document.getElementById("swapSection");
+    swapSection.style.display = "block";
+
+    // Update teams list.
+    var selectInnerHTML = "";
+    SCHEDULES[year].owners.forEach(ownerId => {
+      selectInnerHTML += "<option value='" + ownerId + "'>" + TEAMS[ownerId][year].name + "</option>";
+    });
+    document.getElementById("team1swap").innerHTML = selectInnerHTML;
+    document.getElementById("team2swap").innerHTML = selectInnerHTML;
+    document.getElementById("swappedStandings").innerHTML = "";
   }
 }
 
 
 </script>
 </head>
-<body onload="init(globalYear)">
+<body onload="init()">
   <h1>Trail of Tears Club Fantasy Stats - <div id="year">2021</div></h1>
   View year: <select name="yearSelect" id="yearSelect">
     <option value="2019">2019</option>
     <option value="2020">2020</option>
     <option value="2021" selected="selected">2021</option>
+    <option value="0">All time</option>
   </select>
   <button onclick="changeYear()">Go!</button>
   <h2>Main Standings</h2>
@@ -635,13 +679,15 @@ function changeYear() {
   <div id="breakdown"></div>
   <h2>Team Swap</h2>
   <p>What would have happened if these 2 teams swapped schedules?</p>
-  <span>Swap
-    <select name="team1swap" id="team1swap"></select>
-    with 
-    <select name="team2swap" id="team2swap"></select>
-  </span>
-  <button id="swap" onclick="swapTeams()">Recalculate!</button>
-  <div id="swappedStandings"></div>
+  <div id="swapSection">
+    <span>Swap
+      <select name="team1swap" id="team1swap"></select>
+      with 
+      <select name="team2swap" id="team2swap"></select>
+    </span>
+    <button id="swap" onclick="swapTeams()">Recalculate!</button>
+    <div id="swappedStandings"></div>
+  </div>
   <br>
   <br>
   <br>
