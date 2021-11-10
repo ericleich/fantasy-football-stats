@@ -672,7 +672,7 @@ function swapTeams() {
 }
 
 function getAllTimeStandingsTableHtml(league) {
-  var html = "<table border='1'><tr><th>Rank</th><th>Team</th><th>Record</th><th>Winning Percentage</th></tr>";
+  var html = "<table border='1'><tr><th>Rank</th><th>Owner</th><th>Record</th><th>Winning Percentage</th></tr>";
   var rank = 1;
   for (const [ownerId, record] of Object.entries(league.records)) {
     html += "<tr><td>" + rank++ + "</td><td>" + OWNERS[ownerId] + "</td><td>" + record.toString() + "</td><td>" +  record.getPercentage() + "</td></tr>";
@@ -706,7 +706,7 @@ function getAllTimeBreakdownTableHtml(league) {
 }
 
 function getStandingsTableHtml(season) {
-  var html = "<table border='1'><tr><th>Rank</th><th>Team</th><th>Record</th><th>Points</th></tr>";
+  var html = "<table border='1'><tr><th>Rank</th><th>Team</th><th>Owner</th><th>Record</th><th>Points</th></tr>";
   var teams = Object.values(season.teams);
   teams.sort((team1, team2) => {
     if (season.records[team1.ownerId].getWinCount() > season.records[team2.ownerId].getWinCount()) {
@@ -718,7 +718,7 @@ function getStandingsTableHtml(season) {
   });
   var rank = 1;
   teams.forEach(team => {
-    html += "<tr><td>" + rank++ + "</td><td>" + team.name + "</td><td>" + season.records[team.ownerId].toString() + "</td><td>" + team.getTotalScore() + "</td></tr>";
+    html += "<tr><td>" + rank++ + "</td><td>" + team.name + "</td><td>" + OWNERS[team.ownerId] + "</td><td>" + season.records[team.ownerId].toString() + "</td><td>" + team.getTotalScore() + "</td></tr>";
   });
   html += "</table>";
   return html;
@@ -729,7 +729,7 @@ function getBreakdownTablesHtml(season) {
   for (const [ownerId, breakdown] of Object.entries(season.breakdown)) {
     var team = season.getTeam(ownerId);
     var totalBreakdownRecord = new Record();
-    var html = "<table width=400 border='1'><tr><th colspan='3'>" + team.name + "</th></tr>";
+    var html = "<table width=400 border='1'><tr><th colspan='3'>" + team.name + " (" + OWNERS[team.ownerId] + ")</th></tr>";
     html += "<tr><th>VS.</th><th>PLAYED</th><th>ALL</th></tr>";
     for (const [opponentOwnerId, records] of Object.entries(breakdown)) {
       html += "<tr><td>" + season.getTeam(opponentOwnerId).name +
