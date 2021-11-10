@@ -611,6 +611,9 @@ function getBreakdownTablesHtml(season) {
     html += "<tr><th>Total" +
           "</th><th>" + season.records[ownerId].toString() +
           "</th><th>" + totalBreakdownRecord.toString() + "</th></tr>";
+    html += "<tr><th>Win percentage" +
+          "</th><th>" + season.records[ownerId].getPercentage() + "%" +
+          "</th><th>" + totalBreakdownRecord.getPercentage() + "%</th></tr>";
     html += "</table>"
     finalHtml += html;
   }
