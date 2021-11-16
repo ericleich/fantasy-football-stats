@@ -364,6 +364,10 @@ class League {
     this.records = this.calculateRecords();
   }
 
+  getSeason(year) {
+    return this.seasons[year];
+  }
+
   calculateRecords() {
     var overallRecords = {};
     Object.keys(OWNERS).forEach(ownerId => {
@@ -517,8 +521,6 @@ class Season {
 
 class Matchup {
   constructor(teamId1, teamId2) {
-    this.teamId1 = teamId1;
-    this.teamId2 = teamId2;
     // New code.
     this.ownerId1 = teamId1;
     this.ownerId2 = teamId2;
@@ -623,11 +625,6 @@ var globalYear;
 var globalLeague;
 
 function init() {
-  // globalYear = year;
-  // let season = createSeason(year);
-  // season.printRecords();
-  // season.printBreakdown();
-
   // Init seasons.
   let seasons = {};
   [2017, 2018, 2019, 2020, 2021].forEach(year => {
@@ -669,6 +666,77 @@ function swapTeams() {
 
 
   console.log("swapping: " + team1Value + " with " + team2Value);
+}
+
+// Simulations
+function runSimulation() {
+  // Takes time. Update UI.
+  let simulateButton = document.getElementById("simulate");
+  simulateButton.innerHTML = "Running Simulation...";
+  simulateButton.disabled = true;
+
+  // UI doesn't update properly. Set a timeout before starting work.
+  setTimeout(() => {internalRunSimulation(); }, 50);
+}
+
+function internalRunSimulation() {
+  // OwnerId -> Record, where wins = made the playoffs, losses = missed the playoffs.
+  let teams = globalLeague.getSeason(globalYear).teams;
+  let playoffRecords = {};
+  Object.values(teams).forEach(team => {
+    playoffRecords[team.ownerId] = new Record();
+  });
+  recursiveRunSimulation(playoffRecords, {}, teams, SCHEDULES[globalYear].owners);
+
+  // Update UI again.
+  let simulateButton = document.getElementById("simulate");
+  simulateButton.disabled = false;
+  simulateButton.innerHTML = "Run simulation!";
+
+  //console.log(playoffRecords);
+  document.getElementById("simulatedStandings").innerHTML = getSimulatedStandingsTableHtml(globalLeague.getSeason(globalYear), playoffRecords);
+}
+
+function recursiveRunSimulation(playoffRecords, newOwners, ownersToChange, ownerIdsList) {
+  if (Object.keys(ownersToChange).length == 0) {
+    // Create new schedule and run simulation.
+    let newSchedule = createSchedule(globalYear);
+    for (const [weekNumber, week] of Object.entries(newSchedule)) {
+      week.matchups.forEach(matchup => {
+        matchup.ownerId1 = newOwners[matchup.ownerId1];
+        matchup.ownerId2 = newOwners[matchup.ownerId2];
+      });
+    }
+    let season = new Season(globalYear, globalLeague.getSeason(globalYear).teams, newSchedule);
+    var teams = Object.values(season.teams);
+    teams.sort((team1, team2) => {
+      if (season.records[team1.ownerId].getWinCount() > season.records[team2.ownerId].getWinCount()) {
+        return -1;
+      } else if (season.records[team2.ownerId].getWinCount() > season.records[team1.ownerId].getWinCount()) {
+        return 1;
+      }
+      return team2.getTotalScore() - team1.getTotalScore();
+    });
+    var rank = 1;
+    teams.forEach(team => {
+      if (rank++ <= 4) { // 4 teams make the playoffs.
+        playoffRecords[team.ownerId].wins++;
+      } else {
+        playoffRecords[team.ownerId].losses++;
+      }
+    });
+    return;
+  }
+  Object.keys(ownersToChange).forEach(originalOwnerId => {
+    // Make deep copies.
+    var newOwnersCopy = {...newOwners};
+    var ownersToChangeCopy = {...ownersToChange};
+
+    // Set new owner ID for the purposes of the schedule.
+    newOwnersCopy[originalOwnerId] = ownerIdsList[Object.keys(newOwners).length];
+    delete ownersToChangeCopy[originalOwnerId];
+    recursiveRunSimulation(playoffRecords, newOwnersCopy, ownersToChangeCopy, ownerIdsList);
+  });
 }
 
 function getAllTimeStandingsTableHtml(league) {
@@ -749,6 +817,25 @@ function getBreakdownTablesHtml(season) {
   return finalHtml;
 }
 
+function getSimulatedStandingsTableHtml(season, playoffRecords) {
+  var html = "<table border='1'><tr><th>Rank</th><th>Team</th><th>Owner</th><th>Record</th><th>Points</th><th>Chance of Playoffs</th></tr>";
+  var teams = Object.values(season.teams);
+  teams.sort((team1, team2) => {
+    if (season.records[team1.ownerId].getWinCount() > season.records[team2.ownerId].getWinCount()) {
+      return -1;
+    } else if (season.records[team2.ownerId].getWinCount() > season.records[team1.ownerId].getWinCount()) {
+      return 1;
+    }
+    return team2.getTotalScore() - team1.getTotalScore();
+  });
+  var rank = 1;
+  teams.forEach(team => {
+    html += "<tr><td>" + rank++ + "</td><td>" + team.name + "</td><td>" + OWNERS[team.ownerId] + "</td><td>" + season.records[team.ownerId].toString() + "</td><td>" + team.getTotalScore() + "</td><td>" + playoffRecords[team.ownerId].getPercentage() + "%</td></tr>";
+  });
+  html += "</table>";
+  return html;
+}
+
 function changeYear() {
   let year = document.getElementById("yearSelect").value;
   let yearText = document.getElementById("yearSelect").selectedOptions[0].innerHTML;
@@ -770,6 +857,10 @@ function changeYear() {
     // Hide schedule swap. Doesn't make sense for all time.
     var swapSection = document.getElementById("swapSection");
     swapSection.style.display = "none";
+
+    // Hide simulation section. Doesn't make sense for all time.
+    var simulationSection = document.getElementById("simulationSection");
+    simulationSection.style.display = "none";
   } else {
     let season = globalLeague.seasons[globalYear];
     let standingsDiv = document.getElementById("standings");
@@ -782,6 +873,10 @@ function changeYear() {
     var swapSection = document.getElementById("swapSection");
     swapSection.style.display = "block";
 
+    // Show simulation section.
+    var simulationSection = document.getElementById("simulationSection");
+    simulationSection.style.display = "block";
+
     // Update teams list.
     var selectInnerHTML = "";
     SCHEDULES[year].owners.forEach(ownerId => {
@@ -790,6 +885,9 @@ function changeYear() {
     document.getElementById("team1swap").innerHTML = selectInnerHTML;
     document.getElementById("team2swap").innerHTML = selectInnerHTML;
     document.getElementById("swappedStandings").innerHTML = "";
+
+    // Reset simulation.
+    document.getElementById("simulatedStandings").innerHTML = "";
   }
 }
 
@@ -821,6 +919,13 @@ function changeYear() {
     </span>
     <button id="swap" onclick="swapTeams()">Recalculate!</button>
     <div id="swappedStandings"></div>
+  </div>
+  <div id="simulationSection">
+    <h2>Playoff Simulation</h2>
+    <p>What were your chances of making the playoffs? Run all 40,320 simulations to find out!</p>
+    <p><b>Note: Simulation takes several seconds to complete. Page may appear unresponsive. Please wait.</b></p>
+    <button id="simulate" onclick="runSimulation()">Run simulation!</button>
+    <div id="simulatedStandings"></div>
   </div>
   <br>
   <br>
