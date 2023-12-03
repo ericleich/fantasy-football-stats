@@ -1,86 +1,936 @@
+<!DOCTYPE html>
 <html>
 <head>
 <script>
-class Season {
-  constructor(year, width) {
-    this.year = year;
-    this.width = width;
+
+
+let OWNERS = {
+  "1": "Matt",
+  "2": "Harrison",
+  "3": "Adam",
+  "4": "Jason",
+  "5": "Bilal",
+  "6": "Jesse",
+  "7": "Eric",
+  "8": "Lee",
+  "9": "Mike" 
+}
+
+let SCHEDULES = {
+  "2017": {
+    "owners": [1, 2, 4, 5, 6, 7, 8, 9],
+    "weeks": 13,
+    "schedule": {
+      "1": [[4, 8], [2, 6], [9, 1], [5, 7]],
+      "2": [[2, 4], [8, 9], [6, 5], [1, 7]],
+      "3": [[4, 9], [5, 2], [7, 8], [1, 6]],
+      "4": [[5, 4], [9, 7], [2, 1], [8, 6]],
+      "5": [[4, 7], [1, 5], [6, 9], [8, 2]],
+      "6": [[1, 4], [7, 6], [5, 8], [9, 2]],
+      "7": [[4, 6], [8, 1], [2, 7], [9, 5]],
+      "8": [[8, 4], [6, 2], [1, 9], [7, 5]],
+      "9": [[4, 2], [9, 8], [5, 6], [7, 1]],
+      "10": [[9, 4], [2, 5], [8, 7], [6, 1]],
+      "11": [[4, 5], [7, 9], [1, 2], [6, 8]],
+      "12": [[7, 4], [5, 1], [9, 6], [2, 8]],
+      "13": [[4, 1], [6, 7], [8, 5], [2, 9]]
+    }
+  },
+  "2018": {
+    "owners": [1, 2, 4, 5, 6, 7, 8, 9],
+    "weeks": 13,
+    "schedule": {
+      "1": [[4, 8], [2, 6], [9, 1], [5, 7]],
+      "2": [[2, 4], [8, 9], [6, 5], [1, 7]],
+      "3": [[4, 9], [5, 2], [7, 8], [1, 6]],
+      "4": [[5, 4], [9, 7], [2, 1], [8, 6]],
+      "5": [[4, 7], [1, 5], [6, 9], [8, 2]],
+      "6": [[1, 4], [7, 6], [5, 8], [9, 2]],
+      "7": [[4, 6], [8, 1], [2, 7], [9, 5]],
+      "8": [[8, 4], [6, 2], [1, 9], [7, 5]],
+      "9": [[4, 2], [9, 8], [5, 6], [7, 1]],
+      "10": [[9, 4], [2, 5], [8, 7], [6, 1]],
+      "11": [[4, 5], [7, 9], [1, 2], [6, 8]],
+      "12": [[7, 4], [5, 1], [9, 6], [2, 8]],
+      "13": [[4, 1], [6, 7], [8, 5], [2, 9]]
+    }
+  },
+  "2019": {
+    "owners": [1, 2, 4, 5, 6, 7, 8, 9],
+    "weeks": 13,
+    "schedule": {
+      "1": [[4, 8], [2, 6], [9, 1], [5, 7]],
+      "2": [[2, 4], [8, 9], [6, 5], [1, 7]],
+      "3": [[4, 9], [5, 2], [7, 8], [1, 6]],
+      "4": [[5, 4], [9, 7], [2, 1], [8, 6]],
+      "5": [[4, 7], [1, 5], [6, 9], [8, 2]],
+      "6": [[1, 4], [7, 6], [5, 8], [9, 2]],
+      "7": [[4, 6], [8, 1], [2, 7], [9, 5]],
+      "8": [[8, 4], [6, 2], [1, 9], [7, 5]],
+      "9": [[4, 2], [9, 8], [5, 6], [7, 1]],
+      "10": [[9, 4], [2, 5], [8, 7], [6, 1]],
+      "11": [[4, 5], [7, 9], [1, 2], [6, 8]],
+      "12": [[7, 4], [5, 1], [9, 6], [2, 8]],
+      "13": [[4, 1], [6, 7], [8, 5], [2, 9]]
+    }
+  },
+  "2020": {
+    "owners": [1, 2, 3, 4, 5, 6, 7, 8],
+    "weeks": 12,
+    "schedule": {
+      "1": [[1, 2], [3, 4], [5, 6], [7, 8]],
+      "2": [[3, 1], [2, 5], [4, 7], [6, 8]],
+      "3": [[1, 5], [7, 3], [8, 2], [6, 4]],
+      "4": [[7, 1], [5, 8], [3, 6], [2, 4]],
+      "5": [[1, 8], [6, 7], [4, 5], [2, 3]],
+      "6": [[6, 1], [8, 4], [7, 2], [5, 3]],
+      "7": [[1, 4], [2, 6], [3, 8], [5, 7]],
+      "8": [[2, 1], [4, 3], [6, 5], [8, 7]],
+      "9": [[1, 3], [5, 2], [7, 4], [8, 6]],
+      "10": [[5, 1], [3, 7], [2, 8], [4, 6]],
+      "11": [[1, 7], [8, 5], [6, 3], [4, 2]],
+      "12": [[8, 1], [7, 6], [5, 4], [3, 2]]
+    }
+  },
+  "2021": {
+    "owners": [1, 2, 3, 4, 5, 6, 7, 8],
+    "weeks": 13,
+    "schedule": {
+      "1": [[5, 6], [7, 3], [2, 8], [1, 4]],
+      "2": [[7, 5], [6, 2], [3, 1], [8, 4]],
+      "3": [[5, 2], [1, 7], [4, 6], [8, 3]],
+      "4": [[1, 5], [2, 4], [7, 8], [6, 3]],
+      "5": [[5, 4], [8, 1], [3, 2], [6, 7]],
+      "6": [[8, 5], [4, 3], [1, 6], [2, 7]],
+      "7": [[5, 3], [6, 8], [7, 4], [2, 1]],
+      "8": [[6, 5], [3, 7], [8, 2], [4, 1]],
+      "9": [[5, 7], [2, 6], [1, 3], [4, 8]],
+      "10": [[2, 5], [7, 1], [6, 4], [3, 8]],
+      "11": [[5, 1], [4, 2], [8, 7], [3, 6]],
+      "12": [[4, 5], [1, 8], [2, 3], [7, 6]],
+      "13": [[5, 8], [3, 4], [6, 1], [7, 2]],
+    }
+  }
+};
+
+let TEAMS = {
+  "1": {
+    "2017": {
+      "name": "Island of Misfit WRs",
+      "scores": [101.38, 68.5, 113.92, 54.88, 105.46, 153.48, 150.22, 89.74, 113.96, 121.54, 155.32, 124.58, 106.22]
+    },
+    "2018": {
+      "name": "Kamara Runnin Son of a Gun",
+      "scores": [134.84, 134.0, 123.9, 151.68, 99.88, 88.1, 99.86, 111.66, 142.28, 144.52, 151.68, 141.84, 81.6]
+    },
+    "2019": {
+      "name": "Out of Luck",
+      "scores": [116.72, 105.44, 106.86, 95.0, 103.76, 86.34, 109.94, 135.62, 92.26, 90.68, 124.22, 102.24, 79.56]
+    },
+    "2020": {
+      "name": "4th and 2020",
+      "scores": [96.54, 131.38, 127.7, 114.34, 99.2, 84.3, 129.8, 115.94, 104.48, 86.28, 101.72, 130.28]
+    },
+    "2021": {
+      "name": "4th and 2020",
+      "scores": [84.4, 151.26, 102.08, 133.94, 160.98, 140.38, 136.38, 118.76, 85.34, 56.72, 82.92, 78.4, 110.12]
+    }
+  },
+  "2": {
+    "2017": {
+      "name": "Roethlisbergers Stupid Shirt",
+      "scores": [90.22, 112.12, 81.34, 168.6, 119.46, 86.34, 118.96, 166.38, 117.28, 111.72, 180.12, 139.42, 152.28]
+    },
+    "2018": {
+      "name": "Roethlisbergers Stupid Shirt",
+      "scores": [133.34, 107.38, 121.8, 129.9, 135.3, 122.28, 107.44, 156.86, 134.12, 151.3, 143.38, 144.12, 169.82]
+    },
+    "2019": {
+      "name": "5 Carries 3 TDs 1 Yard",
+      "scores": [98.46, 119.32, 110.82, 120.94, 139.32, 144.4, 109.46, 117.2, 122.16, 120.36, 125.2, 90.96, 101.12]
+    },
+    "2020": {
+      "name": "You're Awful Murray",
+      "scores": [129.3, 163.74, 120.3, 105.32, 130.2, 119.62, 154.2, 84.14, 106.02, 135.2, 140.62, 87.0]
+    },
+    "2021": {
+      "name": "You're Awful Murray",
+      "scores": [110.2, 110.64, 127.48, 109.46, 143.54, 136.08, 97.26, 95.2, 111.98, 99.7, 148.28, 117.6, 151.32]
+    }
+  },
+   "3": {
+    "2020": {
+      "name": "Colonel Miles Sanders",
+      "scores": [158.88, 157.22, 122.0, 121.9, 124.48, 111.02, 102.42, 152.54, 137.4, 106.72, 138.58, 111.6]
+    },
+    "2021": {
+      "name": "Hurts So Good",
+      "scores": [111.48, 120.22, 149.54, 74.68, 177.72, 102.1, 167.04, 81.22, 115.94, 100.6, 160.08, 118.02, 140.78]
+    } 
+  },
+  "4": {
+    "2017": {
+      "name": "Careless Whisper",
+      "scores": [53.14, 117.54, 103.3, 126.02, 146.14, 76.64, 122.04, 96.46, 112.62, 71.04, 95.0, 88.64, 119.36]
+    },
+    "2018": {
+      "name": "Burk Rexhead",
+      "scores": [123.86, 114.14, 94.26, 103.66, 101.42, 173.18, 112.72, 107.12, 122.9, 140.96, 146.82, 119.92, 117.8]
+    },
+    "2019": {
+      "name": "Disco Strangler",
+      "scores": [102.92, 99.36, 153.58, 128.78, 113.34, 117.4, 124.72, 147.96, 123.34, 128.12, 142.78, 122.66, 95.5]
+    },
+    "2020": {
+      "name": "Saquon's Steak House",
+      "scores": [91.62, 109.3, 114.08, 97.8, 128.76, 90.88, 135.46, 79.32, 117.84, 82.22, 132.48, 139.92]
+    },
+    "2021": {
+      "name": "Dr. Clueless + The Electric P*ssy",
+      "scores": [135.06, 110.3, 133.14, 97.72, 159.46, 103.16, 126.74, 90.12, 102.28, 86.7, 80.02, 116.28, 120.22]
+    }
+  },
+  "5" : {
+    "2017": {
+      "name": "I Welcome Our Robot Overlords",
+      "scores": [104.14, 116.88, 47.36, 96.08, 125.76, 97.52, 100.58, 138.18, 65.42, 88.5, 109.3, 99.78, 104.54]
+    },
+    "2018": {
+      "name": "Lee, There Can Only Be One",
+      "scores": [130.68, 124.46, 97.72, 151.86, 118.5, 94.2, 87.76, 117.56, 129.0, 114.1, 144.44, 134.78, 81.44]
+    },
+    "2019": {
+      "name": "Techno Gatsby",
+      "scores": [101.66, 110.42, 116.74, 111.3, 159.52, 131.4, 81.34, 79.88, 133.32, 97.92, 97.78, 140.8, 80.8]
+    },
+    "2020": {
+      "name": "Techno Gatsby",
+      "scores": [140.7, 143.3, 137.98, 148.58, 96.54, 133.88, 92.1, 123.42, 95.72, 99.58, 86.04, 121.58]
+    },
+    "2021": {
+      "name": "The Promise",
+      "scores": [114.62, 119.18, 117.82, 89.32, 124.88, 164.9, 113.46, 142.0, 75.76, 110.88, 80.74, 130.3, 146.82]
+    }
+  },
+  "6" : {
+    "2017": {
+      "name": "Hyde the Krispy Kareem Donuts",
+      "scores": [142.32, 108.68, 167.1, 125.8, 95.64, 118.0, 122.02, 80.82, 64.78, 115.9, 111.28, 130.18, 106.44]
+    },
+    "2018": {
+      "name": "Going for Two",
+      "scores": [99.56, 117.92, 157.44, 131.68, 105.44, 149.14, 134.98, 101.1, 113.84, 110.0, 150.82, 128.44, 107.58]
+    },
+    "2019": {
+      "name": "Guess Whos Back Back Again",
+      "scores": [108.58, 98.8, 109.22, 100.5, 136.94, 69.72, 105.72, 158.58, 117.4, 67.62, 80.06, 71.48, 116.54]
+    },
+    "2020": {
+      "name": "Fresh Prince of Helaire",
+      "scores": [134.86, 113.52, 91.72, 83.2, 113.04, 106.04, 112.72, 74.36, 92.26, 105.92, 93.68, 72.2],
+    },
+    "2021": {
+      "name": "Triple Burger Extra Ketchup",
+      "scores": [144.88, 105.32, 126.1, 134.12, 128.28, 126.78, 85.84, 107.9, 103.64, 128.84, 122.8, 74.92, 94.46]
+    }
+  },
+  "7" : {
+    "2017": {
+      "name": "No Johnson No Zeke No Problem",
+      "scores": [117.58, 118.38, 117.52, 111.08, 87.82, 89.68, 106.16, 132.52, 96.3, 113.34, 86.8, 106.18, 139.32]
+    },
+    "2018": {
+      "name": "Corn Julio",
+      "scores": [100.22, 72.34, 133.74, 100.68, 111.04, 106.38, 139.56, 151.72, 107.08, 108.86, 123.3, 121.56, 118.26] 
+    },
+    "2019": {
+      "name": "Sherlock Mahomes",
+      "scores": [147.22, 118.92, 157.66, 100.8, 101.36, 120.22, 69.44, 119.26, 116.5, 127.64, 115.68, 108.4, 105.3]
+    },
+    "2020": {
+      "name": "No Last Name No Problem",
+      "scores": [117.7, 111.46, 116.68, 116.12, 135.6, 128.44, 131.68, 119.82, 109.1, 84.96, 110.34, 157.08]
+    },
+    "2021": {
+      "name": "No Last Name No Problem",
+      "scores": [137.0, 125.26, 113.72, 109.42, 105.9, 133.42, 83.0, 122.06, 78.76, 123.14, 99.16, 121.2, 83.5]
+    }
+  },
+  "8" : {
+    "2017": {
+      "name": "Swivel Head",
+      "scores": [98.98, 60.58, 82.36, 100.28, 112.34, 98.38, 78.36, 106.92, 117.56, 90.44, 69.4, 87.96, 113.08]
+    },
+    "2018": {
+      "name": "Eternal Optimist",
+      "scores": [132.28, 128.34, 92.5, 125.56, 141.2, 158.76, 135.5, 142.28, 142.22, 126.94, 91.78, 105.88, 135.36]
+    },
+    "2019": {
+      "name": "Eternal Optimist",
+      "scores": [122.8, 123.56, 150.84, 101.52, 140.62, 91.42, 106.76, 142.38, 113.94, 167.22, 96.26, 139.52, 99.92]
+    },
+    "2020": {
+      "name": "Eternal Optimist",
+      "scores": [100.06, 113.58, 146.8, 103.74, 103.96, 58.54, 98.76, 126.16, 96.16, 119.74, 100.14, 103.9]
+    },
+    "2021": {
+      "name": "Eternal Optimist",
+      "scores": [127.36, 122.12, 102.02, 139.08, 96.52, 103.3, 99.44, 100.02, 80.28, 80.72, 151.68, 107.16, 102.5]
+    }
+  },
+  "9" : {
+    "2017": {
+      "name": "Tampa Bey-hawks",
+      "scores": [86.94, 102.12, 87.72, 81.26, 84.54, 95.62, 74.64, 111.56, 104.98, 135.16, 90.18, 112.02, 84.62]
+    },
+    "2018": {
+      "name": "Furious George",
+      "scores": [100.04, 116.84, 101.4, 74.62, 109.48, 123.5, 109.08, 111.64, 74.86, 76.76, 48.28, 67.62, 70.72]
+    },
+    "2019": {
+      "name": "Clive Dancer",
+      "scores": [140.06, 88.1, 112.04, 79.4, 148.72, 135.76, 55.06, 71.56, 84.8, 96.68, 95.14, 62.64, 80.18]
+    }
+  }
+};
+
+class Owner {
+  constructor(id, name, teams) {
+    this.id = id;
+    this.name = name;
+    this.teams = teams; // Dictionary<year, Team>
+  }
+
+  toString() {
+    var str = "Owner ID #" + this.id + " is " + this.name + ".";
+    for (const [year, team] of Object.entries(this.teams)) {
+      str += " " + team.toString();
+    }
+    return str;
+  }
+
+  getTeam(year) {
+    return this.teams(year);
   }
 }
 
+class Team {
+  constructor(ownerId, year, name, scores) {
+    this.ownerId = ownerId;
+    this.year = year;
+    this.name = name;
+    this.scores = scores;
+
+  }
+
+  getTotalScore() {
+    var totalScore = 0;
+    for (var index in this.scores) {
+      totalScore += this.scores[index];
+    }
+    // Round to 2 decimal places.
+    return Math.round((totalScore + Number.EPSILON) * 100) / 100
+  }
+
+  getScore(weekNumber) {
+    // Array is 0-indexed
+    return this.scores[weekNumber - 1];
+  }
+
+  toString() {
+    return "In " + this.year + ", " + this.name + " had total score of " + this.getTotalScore() + " with individual scores: " + this.scores;
+  }
+}
+
+class League {
+  constructor(seasons) {
+    // Dictionary(year -> Season)
+    this.seasons = seasons;
+    /*
+    {
+      "<id>": {
+        "<opponentId>": {
+          "played": <Record>,
+          "all": <Record>,
+        },
+        ...
+      },
+      ...
+    }
+    */
+    this.breakdown = this.calculateAllTimeBreakdown();
+
+    // Dictionary(ownerId -> Record)
+    this.records = this.calculateRecords();
+  }
+
+  getSeason(year) {
+    return this.seasons[year];
+  }
+
+  calculateRecords() {
+    var overallRecords = {};
+    Object.keys(OWNERS).forEach(ownerId => {
+      overallRecords[ownerId] = new Record();
+    });
+    for (const [year, season] of Object.entries(this.seasons)) {
+      for (const [ownerId, record] of Object.entries(season.records)) {
+        overallRecords[ownerId].add(record);
+      }
+    }
+    return overallRecords;
+  }
+
+  calculateAllTimeBreakdown() {
+    // Initialize breakdown.
+    let overallBreakdown = {};
+    Object.keys(OWNERS).forEach(ownerId => {
+      overallBreakdown[ownerId] = {};
+      Object.keys(OWNERS).forEach(opponentOwnerId => {
+        if (ownerId === opponentOwnerId) {
+          return;
+        }
+        overallBreakdown[ownerId][opponentOwnerId] = {
+          "played": new Record(),
+          "all": new Record()
+        };
+      });
+    });
+
+    // Populate breakdown.
+    for (const [year, season] of Object.entries(this.seasons)) {
+      for (const [ownerId, opponentsBreakdown] of Object.entries(season.breakdown)) {
+        for (const [opponentOwnerId, recordsJson] of Object.entries(opponentsBreakdown)) {
+          if (ownerId == opponentOwnerId) {
+            continue;
+          }
+          overallBreakdown[ownerId][opponentOwnerId].played.add(recordsJson.played);
+          overallBreakdown[ownerId][opponentOwnerId].all.add(recordsJson.all);
+        }
+      }
+    }
+    return overallBreakdown;
+  }
+}
+
+class Season {
+  constructor(year, teams, schedule) {
+    // int
+    this.year = year;
+    // Dictionary(ownerId -> Team)
+    this.teams = teams;
+    // Dictionary(weekNumber -> Week)
+    this.schedule = schedule;
+    // Dictionary(teamId -> Dictionary(teamId -> Record))
+    this.breakdown = {};
+    this.calculateBreakdown();
+
+    // Dictionary(ownerId -> Record)
+    this.records = {};
+    this.calculateRecords();
+  }
+
+  getTeam(ownerId) {
+    return this.teams[ownerId];
+  }
+
+  calculateRecords() {
+    Object.keys(this.teams).forEach(ownerId => {
+      this.records[ownerId] = new Record();
+    });
+    for (const [weekNumber, week] of Object.entries(this.schedule)) {
+      for (var matchupIndex in week.matchups) {
+        let matchup = week.matchups[matchupIndex];
+        let team1 = this.getTeam(matchup.ownerId1);
+        let team2 = this.getTeam(matchup.ownerId2);
+        let score1 = team1.getScore(week.number);
+        let score2 = team2.getScore(week.number);
+        if (score1 > score2) {
+          //console.log(team1.name + " (" + score1 + ") beats " + team2.name + "(" + score2 + ")");
+          this.records[matchup.ownerId1].wins++;
+          this.records[matchup.ownerId2].losses++;
+        } else if (score1 == score2) {
+          //console.log(team1.name + " (" + score1 + ") tied " + team2.name + "(" + score2 + ")");
+          this.records[matchup.ownerId1].ties++;
+          this.records[matchup.ownerId2].ties++;
+        } else {
+          //console.log(team1.name + " (" + score1 + ") lost to " + team2.name + "(" + score2 + ")");
+          this.records[matchup.ownerId1].losses++;
+          this.records[matchup.ownerId2].wins++;
+        }
+      }
+    }
+  }
+
+  /*
+  {
+    "<id>": {
+      "<opponentId>": {
+        "played": <Record>,
+        "all": <Record>,
+      }
+    }
+  }
+  */
+  calculateBreakdown() {
+    let seasonBreakdown = {};
+    Object.values(this.teams).forEach(team => {
+      let teamBreakdown = {};
+      for (const [weekNumber, week] of Object.entries(this.schedule)) {
+        Object.values(this.teams).forEach(otherTeam => {
+          if (otherTeam.ownerId === team.ownerId) {
+            return;
+          }
+          if (!teamBreakdown[otherTeam.ownerId]) {
+            teamBreakdown[otherTeam.ownerId] = {
+              "played": new Record(),
+              "all": new Record()
+            };
+          }
+          let score = team.getScore(weekNumber);
+          let otherTeamScore = otherTeam.getScore(weekNumber);
+          let isOpponent = (week.getOpponent(team.ownerId) == otherTeam.ownerId);
+          if (score > otherTeamScore) {
+            teamBreakdown[otherTeam.ownerId].all.wins++;
+            if (isOpponent) teamBreakdown[otherTeam.ownerId].played.wins++;
+          } else if (score == otherTeamScore) {
+            teamBreakdown[otherTeam.ownerId].all.ties++;
+            if (isOpponent) teamBreakdown[otherTeam.ownerId].played.ties++;
+          } else {
+            teamBreakdown[otherTeam.ownerId].all.losses++;
+            if (isOpponent) teamBreakdown[otherTeam.ownerId].played.losses++;
+          }
+        });
+      }
+      seasonBreakdown[team.ownerId] = teamBreakdown;
+    });
+    this.breakdown = seasonBreakdown;
+  }
+
+  printRecords() {
+    for (var teamIndex in this.teams) {
+      let team = this.teams[teamIndex];
+      console.log(team.toString());
+    }
+  }
+
+  printBreakdown() {
+    console.log("Breakdown is: " + this.breakdown);
+  }
+}
+
+class Matchup {
+  constructor(teamId1, teamId2) {
+    // New code.
+    this.ownerId1 = teamId1;
+    this.ownerId2 = teamId2;
+  }
+}
+
+class Record {
+  constructor() {
+    this.wins = 0;
+    this.losses = 0;
+    this.ties = 0;
+  }
+
+  getWinCount() {
+    return this.wins + this.ties / 2;
+  }
+
+  add(otherRecord) {
+    this.wins += otherRecord.wins;
+    this.ties += otherRecord.ties;
+    this.losses += otherRecord.losses;
+  }
+
+  getPercentage() {
+    let percentage = (this.wins + this.ties / 2) / (this.wins + this.losses + this.ties) * 100;
+    // Round to 2 decimal places.
+    return Math.round((percentage + Number.EPSILON) * 100) / 100;
+  }
+
+  toString() {
+    return this.wins + "-" + this.losses + "-" + this.ties;
+  }
+}
+
+class Week {
+  constructor(number, matchupsArray) {
+    this.number = number;
+    this.matchups = [];
+    this.opponents = {};
+    for (var index in matchupsArray) {
+      let matchup = matchupsArray[index];
+
+      let teamId1 = matchup[0];
+      let teamId2 = matchup[1];
+
+      // Set up array of matchups objects.
+      this.matchups.push(new Matchup(teamId1, teamId2));
+
+      // Create a map with each team's opponent.
+      this.opponents[teamId1] = teamId2;
+      this.opponents[teamId2] = teamId1;
+    }
+  }
+
+  getOpponent(teamId) {
+    return this.opponents[teamId];
+  }
+}
+
+// Helper create methods.
+function createOwners() {
+  let owners = {};
+
+  for (const [ownerId, ownerTeamsJson] of Object.entries(TEAMS)) {
+    let ownerTeams = {};
+    for (const [year, teamJson] of Object.entries(ownerTeamsJson)) {
+      ownerTeams[year] = new Team(ownerId, year, teamJson.name, teamJson.scores);
+    }
+    owners[ownerId] = new Owner(ownerId, OWNERS[ownerId], ownerTeams);
+  }
+  return owners;
+}
+
+function createTeams(year, owners) {
+  var teams = {};
+  SCHEDULES[year].owners.forEach(ownerId => {
+    teams[ownerId] = owners[ownerId].teams[year];
+  });
+  return teams;
+}
+
+function createSchedule(year) {
+  let schedule = {};
+  let scheduleJson = SCHEDULES[year].schedule;
+  for (var weekNumber in scheduleJson) {
+    let week = new Week(weekNumber, scheduleJson[weekNumber]);
+    schedule[weekNumber] = week;
+  }
+  return schedule;
+}
+
+function createSeason(year, optionalSchedule) {
+  let owners = createOwners();
+  let teams = createTeams(year, owners);
+
+  let schedule = optionalSchedule || createSchedule(year);
+
+  return new Season(year, teams, schedule);
+}
+
+var globalYear;
+var globalLeague;
+
 function init() {
-  console.log("init success");
-  load2023();
+  // Init seasons.
+  let seasons = {};
+  [2017, 2018, 2019, 2020, 2021].forEach(year => {
+    seasons[year] = createSeason(year);
+  });
+  let league = new League(seasons);
+  globalLeague = league;
+
+  // Init UI.
+  changeYear();
 }
 
-function finishInit() {
+function swapTeams() {
+  let team1Value = document.getElementById("team1swap").value;
+  let team2Value = document.getElementById("team2swap").value;
 
-}
-
-// Older than v3 endpoints:
-// https://fantasy.espn.com/apis/v3/games/ffl/leagueHistory/945862?seasonId=2010 - gets teams only
-// https://fantasy.espn.com/apis/v3/games/ffl/leagueHistory/945862?seasonId=2017&view=mTeam&view=mNav&view=mMatchupScore
-
-// 2018 and on:
-// https://fantasy.espn.com/apis/v3/games/ffl/seasons/2023/segments/0/leagues/945862?view=kona_game_state&view=mMatchupScore&view=mNav
-// Very similar. leagueHistory has some extra total season points (incl playoffs, that I probably won't use)
-
-function load2023() {
-  //var url = "https://fantasy.espn.com/apis/v3/games/ffl/seasons/2023/segments/0/leagues/945862?view=kona_game_state&view=mMatchupScore&view=mNav";
-  let url = `2023.json`;
-  console.log(url);
-  const request = new XMLHttpRequest();
-  request.open("GET", url);
-
-  request.onreadystatechange = (e) => {
-    if (request.readyState === XMLHttpRequest.DONE) {
-      const status = request.status;
-      if (status === 0 || (status >= 200 && status < 400)) {
-        // The request has been completed successfully.
-        var picksJson = JSON.parse(request.responseText);
-        console.log(request.responseText);
-        //document.getElementById("sleeper-iframe").contentWindow.document.body.innerHTML = picksJson;
-        var playersArray = createPlayers(picksJson);
-        finishInit(playersArray);
-      } else {
-        // Oh no! There has been an error with the request!
-        alert("Error loading players with status code: " + status);
+  let schedule = createSchedule(globalYear);
+  for (const [weekNumber, week] of Object.entries(schedule)) {
+    week.matchups.forEach(matchup => {
+      // Check for first team.
+      if (matchup.ownerId1 == team1Value) {
+        matchup.ownerId1 = team2Value;
+      } else if (matchup.ownerId1 == team2Value) {
+        matchup.ownerId1 = team1Value;
       }
-    }
-  };
-  // Send the request.
-  request.send();
-}
 
-function loadSeasons(year) {
-  //var url = "https://fantasy.espn.com/apis/v3/games/ffl/seasons/2023/segments/0/leagues/945862?view=mMatchupScore";
-  let url = `https://fantasy.espn.com/apis/v3/games/ffl/seasons/${year}/segments/0/leagues/945862?view=mMatchupScore`;
-  console.log(url);
-  const request = new XMLHttpRequest();
-  request.open("GET", url);
-
-  request.onreadystatechange = (e) => {
-    if (request.readyState === XMLHttpRequest.DONE) {
-      const status = request.status;
-      if (status === 0 || (status >= 200 && status < 400)) {
-        // The request has been completed successfully.
-        var picksJson = JSON.parse(request.responseText);
-        console.log(request.responseText);
-        //document.getElementById("sleeper-iframe").contentWindow.document.body.innerHTML = picksJson;
-        var playersArray = createPlayers(picksJson);
-        finishInit(playersArray);
-      } else {
-        // Oh no! There has been an error with the request!
-        alert("Error loading players with status code: " + status);
+      // Check for second team.
+      if (matchup.ownerId2 == team1Value) {
+        matchup.ownerId2 = team2Value;
+      } else if (matchup.ownerId2 == team2Value) {
+        matchup.ownerId2 = team1Value;
       }
-    }
-  };
-  // Send the request.
-  request.send();
+    });
+  }
+
+  let season = createSeason(globalYear, schedule);
+  let swappedStandingsDiv = document.getElementById("swappedStandings");
+  swappedStandingsDiv.innerHTML = getStandingsTableHtml(season);
+
+
+  console.log("swapping: " + team1Value + " with " + team2Value);
 }
+
+// Simulations
+function runSimulation() {
+  // Takes time. Update UI.
+  let simulateButton = document.getElementById("simulate");
+  simulateButton.innerHTML = "Running Simulation...";
+  simulateButton.disabled = true;
+
+  // UI doesn't update properly. Set a timeout before starting work.
+  setTimeout(() => {internalRunSimulation(); }, 50);
+}
+
+function internalRunSimulation() {
+  // OwnerId -> Record, where wins = made the playoffs, losses = missed the playoffs.
+  let teams = globalLeague.getSeason(globalYear).teams;
+  let playoffRecords = {};
+  Object.values(teams).forEach(team => {
+    playoffRecords[team.ownerId] = new Record();
+  });
+  recursiveRunSimulation(playoffRecords, {}, teams, SCHEDULES[globalYear].owners);
+
+  // Update UI again.
+  let simulateButton = document.getElementById("simulate");
+  simulateButton.disabled = false;
+  simulateButton.innerHTML = "Run simulation!";
+
+  //console.log(playoffRecords);
+  document.getElementById("simulatedStandings").innerHTML = getSimulatedStandingsTableHtml(globalLeague.getSeason(globalYear), playoffRecords);
+}
+
+function recursiveRunSimulation(playoffRecords, newOwners, ownersToChange, ownerIdsList) {
+  if (Object.keys(ownersToChange).length == 0) {
+    // Create new schedule and run simulation.
+    let newSchedule = createSchedule(globalYear);
+    for (const [weekNumber, week] of Object.entries(newSchedule)) {
+      week.matchups.forEach(matchup => {
+        matchup.ownerId1 = newOwners[matchup.ownerId1];
+        matchup.ownerId2 = newOwners[matchup.ownerId2];
+      });
+    }
+    let season = new Season(globalYear, globalLeague.getSeason(globalYear).teams, newSchedule);
+    var teams = Object.values(season.teams);
+    teams.sort((team1, team2) => {
+      if (season.records[team1.ownerId].getWinCount() > season.records[team2.ownerId].getWinCount()) {
+        return -1;
+      } else if (season.records[team2.ownerId].getWinCount() > season.records[team1.ownerId].getWinCount()) {
+        return 1;
+      }
+      return team2.getTotalScore() - team1.getTotalScore();
+    });
+    var rank = 1;
+    teams.forEach(team => {
+      if (rank++ <= 4) { // 4 teams make the playoffs.
+        playoffRecords[team.ownerId].wins++;
+      } else {
+        playoffRecords[team.ownerId].losses++;
+      }
+    });
+    return;
+  }
+  Object.keys(ownersToChange).forEach(originalOwnerId => {
+    // Make deep copies.
+    var newOwnersCopy = {...newOwners};
+    var ownersToChangeCopy = {...ownersToChange};
+
+    // Set new owner ID for the purposes of the schedule.
+    newOwnersCopy[originalOwnerId] = ownerIdsList[Object.keys(newOwners).length];
+    delete ownersToChangeCopy[originalOwnerId];
+    recursiveRunSimulation(playoffRecords, newOwnersCopy, ownersToChangeCopy, ownerIdsList);
+  });
+}
+
+function getAllTimeStandingsTableHtml(league) {
+  var html = "<table border='1'><tr><th>Owner</th><th>Record</th><th>Winning Percentage</th></tr>";
+  //var rank = 1;
+  for (const [ownerId, record] of Object.entries(league.records)) {
+    html += "<tr><td>" + OWNERS[ownerId] + "</td><td>" + record.toString() + "</td><td>" +  record.getPercentage() + "</td></tr>";
+  }
+  html += "</table>";
+  return html;
+}
+
+function getAllTimeBreakdownTableHtml(league) {
+  var finalHtml = "";
+  for (const [ownerId, breakdown] of Object.entries(league.breakdown)) {
+    var totalBreakdownRecord = new Record();
+    var html = "<table width=400 border='1'><tr><th colspan='3'>" + OWNERS[ownerId] + "</th></tr>";
+    html += "<tr><th>VS.</th><th>PLAYED</th><th>ALL</th></tr>";
+    for (const [opponentOwnerId, records] of Object.entries(breakdown)) {
+      html += "<tr><td>" + OWNERS[opponentOwnerId] +
+          "</td><td>" + records.played.toString() +
+          "</td><td>" + records.all.toString() + "</td></tr>";
+          totalBreakdownRecord.add(records.all);
+    }
+    html += "<tr><th>Total" +
+          "</th><th>" + league.records[ownerId].toString() +
+          "</th><th>" + totalBreakdownRecord.toString() + "</th></tr>";
+    html += "<tr><th>Win percentage" +
+          "</th><th>" + league.records[ownerId].getPercentage() + "%" +
+          "</th><th>" + totalBreakdownRecord.getPercentage() + "%</th></tr>";
+    html += "</table>"
+    finalHtml += html;
+  }
+  return finalHtml;
+}
+
+function getStandingsTableHtml(season) {
+  var html = "<table border='1'><tr><th>Rank</th><th>Team</th><th>Owner</th><th>Record</th><th>Points</th></tr>";
+  var teams = Object.values(season.teams);
+  teams.sort((team1, team2) => {
+    if (season.records[team1.ownerId].getWinCount() > season.records[team2.ownerId].getWinCount()) {
+      return -1;
+    } else if (season.records[team2.ownerId].getWinCount() > season.records[team1.ownerId].getWinCount()) {
+      return 1;
+    }
+    return team2.getTotalScore() - team1.getTotalScore();
+  });
+  var rank = 1;
+  teams.forEach(team => {
+    html += "<tr><td>" + rank++ + "</td><td>" + team.name + "</td><td>" + OWNERS[team.ownerId] + "</td><td>" + season.records[team.ownerId].toString() + "</td><td>" + team.getTotalScore() + "</td></tr>";
+  });
+  html += "</table>";
+  return html;
+}
+
+function getBreakdownTablesHtml(season) {
+  var finalHtml = "";
+  for (const [ownerId, breakdown] of Object.entries(season.breakdown)) {
+    var team = season.getTeam(ownerId);
+    var totalBreakdownRecord = new Record();
+    var html = "<table width=400 border='1'><tr><th colspan='3'>" + team.name + " (" + OWNERS[team.ownerId] + ")</th></tr>";
+    html += "<tr><th>VS.</th><th>PLAYED</th><th>ALL</th></tr>";
+    for (const [opponentOwnerId, records] of Object.entries(breakdown)) {
+      html += "<tr><td>" + season.getTeam(opponentOwnerId).name +
+          "</td><td>" + records.played.toString() +
+          "</td><td>" + records.all.toString() + "</td></tr>";
+          totalBreakdownRecord.add(records.all);
+    }
+    html += "<tr><th>Total" +
+          "</th><th>" + season.records[ownerId].toString() +
+          "</th><th>" + totalBreakdownRecord.toString() + "</th></tr>";
+    html += "<tr><th>Win percentage" +
+          "</th><th>" + season.records[ownerId].getPercentage() + "%" +
+          "</th><th>" + totalBreakdownRecord.getPercentage() + "%</th></tr>";
+    html += "</table>"
+    finalHtml += html;
+  }
+  return finalHtml;
+}
+
+function getSimulatedStandingsTableHtml(season, playoffRecords) {
+  var html = "<table border='1'><tr><th>Rank</th><th>Team</th><th>Owner</th><th>Record</th><th>Points</th><th>Chance of Playoffs</th></tr>";
+  var teams = Object.values(season.teams);
+  teams.sort((team1, team2) => {
+    if (season.records[team1.ownerId].getWinCount() > season.records[team2.ownerId].getWinCount()) {
+      return -1;
+    } else if (season.records[team2.ownerId].getWinCount() > season.records[team1.ownerId].getWinCount()) {
+      return 1;
+    }
+    return team2.getTotalScore() - team1.getTotalScore();
+  });
+  var rank = 1;
+  teams.forEach(team => {
+    html += "<tr><td>" + rank++ + "</td><td>" + team.name + "</td><td>" + OWNERS[team.ownerId] + "</td><td>" + season.records[team.ownerId].toString() + "</td><td>" + team.getTotalScore() + "</td><td>" + playoffRecords[team.ownerId].getPercentage() + "%</td></tr>";
+  });
+  html += "</table>";
+  return html;
+}
+
+function changeYear() {
+  let year = document.getElementById("yearSelect").value;
+  let yearText = document.getElementById("yearSelect").selectedOptions[0].innerHTML;
+  if (year == globalYear) {
+    // No change.
+    return;
+  }
+  globalYear = year;
+  document.getElementById("year").innerHTML = yearText;
+  if (year == 0) {
+    // All time stats.
+    // Init UI.
+    let standingsDiv = document.getElementById("standings");
+    standingsDiv.innerHTML = getAllTimeStandingsTableHtml(globalLeague);
+
+    let breakdownDiv = document.getElementById("breakdown");
+    breakdownDiv.innerHTML = getAllTimeBreakdownTableHtml(globalLeague);
+
+    // Hide schedule swap. Doesn't make sense for all time.
+    var swapSection = document.getElementById("swapSection");
+    swapSection.style.display = "none";
+
+    // Hide simulation section. Doesn't make sense for all time.
+    var simulationSection = document.getElementById("simulationSection");
+    simulationSection.style.display = "none";
+  } else {
+    let season = globalLeague.seasons[globalYear];
+    let standingsDiv = document.getElementById("standings");
+    standingsDiv.innerHTML = getStandingsTableHtml(season);
+
+    let breakdownDiv = document.getElementById("breakdown");
+    breakdownDiv.innerHTML = getBreakdownTablesHtml(season);
+
+    // Show swap teams section.
+    var swapSection = document.getElementById("swapSection");
+    swapSection.style.display = "block";
+
+    // Show simulation section.
+    var simulationSection = document.getElementById("simulationSection");
+    simulationSection.style.display = "block";
+
+    // Update teams list.
+    var selectInnerHTML = "";
+    SCHEDULES[year].owners.forEach(ownerId => {
+      selectInnerHTML += "<option value='" + ownerId + "'>" + TEAMS[ownerId][year].name + "</option>";
+    });
+    document.getElementById("team1swap").innerHTML = selectInnerHTML;
+    document.getElementById("team2swap").innerHTML = selectInnerHTML;
+    document.getElementById("swappedStandings").innerHTML = "";
+
+    // Reset simulation.
+    document.getElementById("simulatedStandings").innerHTML = "";
+  }
+}
+
 
 </script>
 </head>
-<body onload=init()>
+<body onload="init()">
+  <h1>Trail of Tears Club Fantasy Stats - <div id="year">2021</div></h1>
+  View year: <select name="yearSelect" id="yearSelect">
+    <option value="2017">2017</option>
+    <option value="2018">2018</option>
+    <option value="2019">2019</option>
+    <option value="2020">2020</option>
+    <option value="2021" selected="selected">2021</option>
+    <option value="0">All time</option>
+  </select>
+  <button onclick="changeYear()">Go!</button>
+  <h2>Main Standings</h2>
+  <div id="standings"></div>
+  <h2>Breakdown</h2>
+  <div id="breakdown"></div>
+  <div id="swapSection">
+    <h2>Team Swap</h2>
+    <p>What would have happened if these 2 teams swapped schedules?</p>
+    <span>Swap
+      <select name="team1swap" id="team1swap"></select>
+      with 
+      <select name="team2swap" id="team2swap"></select>
+    </span>
+    <button id="swap" onclick="swapTeams()">Recalculate!</button>
+    <div id="swappedStandings"></div>
+  </div>
+  <div id="simulationSection">
+    <h2>Playoff Simulation</h2>
+    <p>What were your chances of making the playoffs? Run all 40,320 simulations to find out!</p>
+    <p><b>Note: Simulation takes several seconds to complete. Page may appear unresponsive. Please wait.</b></p>
+    <button id="simulate" onclick="runSimulation()">Run simulation!</button>
+    <div id="simulatedStandings"></div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
 </body>
 </html>
