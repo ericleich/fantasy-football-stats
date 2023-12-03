@@ -1,0 +1,129 @@
+{
+  "gameId": 1,
+  "id": 945862,
+  "members": [
+    {
+      "displayName": "nhlnyr27",
+      "id": "{0CDECB28-AFB4-4C87-BF01-A4516E1EC1D6}",
+      "isLeagueManager": false
+    },
+    {
+      "displayName": "ericleich11",
+      "id": "{1FC20E76-0110-49CF-820E-760110E9CF92}",
+      "isLeagueManager": false
+    },
+    {
+      "displayName": "ygkr241037",
+      "id": "{5C85FFF2-DDF0-480C-932E-AFE65C18890E}",
+      "isLeagueManager": false
+    },
+    {
+      "displayName": "cvg1144",
+      "id": "{811EE194-6EFA-487A-94AD-2100FB504CB1}",
+      "isLeagueManager": false
+    },
+    {
+      "displayName": "wappow",
+      "id": "{A9D756BB-3508-4051-BB08-3930983809EF}",
+      "isLeagueManager": false
+    },
+    {
+      "displayName": "haralcor",
+      "id": "{AF684C4E-FBED-4985-BD01-6D07D804994B}",
+      "isLeagueManager": false
+    },
+    {
+      "displayName": "adamvick11",
+      "id": "{B7F40F6F-28AF-48C4-B501-BC138FBF92CB}",
+      "isLeagueManager": false
+    },
+    {
+      "displayName": "biloyaya",
+      "id": "{C3A0D5AC-3218-4DA5-A7EB-6F151AC7A434}",
+      "isLeagueManager": false
+    },
+    {
+      "displayName": "eel7566",
+      "id": "{D3EC8C4E-7D70-41B1-BEA4-E40101FE5FA5}",
+      "isLeagueManager": false
+    }
+  ],
+  "scoringPeriodId": 12,
+  "seasonId": 2023,
+  "segmentId": 0,
+  "settings": {
+    "name": "Tears Club"
+  },
+  "status": {
+    "currentMatchupPeriod": 12,
+    "isActive": true,
+    "latestScoringPeriod": 12
+  },
+  "teams": [
+    {
+      "abbrev": "Jay",
+      "id": 1,
+      "name": "I'm Mr. Manager",
+      "owners": [
+        "{0CDECB28-AFB4-4C87-BF01-A4516E1EC1D6}"
+      ]
+    },
+    {
+      "abbrev": "Lee",
+      "id": 2,
+      "name": "Eternal Optimist",
+      "owners": [
+        "{D3EC8C4E-7D70-41B1-BEA4-E40101FE5FA5}"
+      ]
+    },
+    {
+      "abbrev": "HAC",
+      "id": 3,
+      "name": "You're Awful Murray",
+      "owners": [
+        "{AF684C4E-FBED-4985-BD01-6D07D804994B}"
+      ]
+    },
+    {
+      "abbrev": "BY",
+      "id": 6,
+      "name": "Native Tampa-n",
+      "owners": [
+        "{C3A0D5AC-3218-4DA5-A7EB-6F151AC7A434}"
+      ]
+    },
+    {
+      "abbrev": "Eric",
+      "id": 9,
+      "name": "Aint No Problem",
+      "owners": [
+        "{1FC20E76-0110-49CF-820E-760110E9CF92}",
+        "{A9D756BB-3508-4051-BB08-3930983809EF}"
+      ]
+    },
+    {
+      "abbrev": "MATT",
+      "id": 10,
+      "name": "He's gonna be ALL right",
+      "owners": [
+        "{811EE194-6EFA-487A-94AD-2100FB504CB1}"
+      ]
+    },
+    {
+      "abbrev": "JR",
+      "id": 11,
+      "name": "Waller At Your Boy",
+      "owners": [
+        "{5C85FFF2-DDF0-480C-932E-AFE65C18890E}"
+      ]
+    },
+    {
+      "abbrev": "BOOM",
+      "id": 12,
+      "name": "J Waddle Oppenhenry",
+      "owners": [
+        "{B7F40F6F-28AF-48C4-B501-BC138FBF92CB}"
+      ]
+    }
+  ]
+}

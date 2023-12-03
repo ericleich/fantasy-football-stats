@@ -1,0 +1,86 @@
+<html>
+<head>
+<script>
+class Season {
+  constructor(year, width) {
+    this.year = year;
+    this.width = width;
+  }
+}
+
+function init() {
+  console.log("init success");
+  load2023();
+}
+
+function finishInit() {
+
+}
+
+// Older than v3 endpoints:
+// https://fantasy.espn.com/apis/v3/games/ffl/leagueHistory/945862?seasonId=2010 - gets teams only
+// https://fantasy.espn.com/apis/v3/games/ffl/leagueHistory/945862?seasonId=2017&view=mTeam&view=mNav&view=mMatchupScore
+
+// 2018 and on:
+// https://fantasy.espn.com/apis/v3/games/ffl/seasons/2023/segments/0/leagues/945862?view=kona_game_state&view=mMatchupScore&view=mNav
+// Very similar. leagueHistory has some extra total season points (incl playoffs, that I probably won't use)
+
+function load2023() {
+  //var url = "https://fantasy.espn.com/apis/v3/games/ffl/seasons/2023/segments/0/leagues/945862?view=kona_game_state&view=mMatchupScore&view=mNav";
+  let url = `2023.json`;
+  console.log(url);
+  const request = new XMLHttpRequest();
+  request.open("GET", url);
+
+  request.onreadystatechange = (e) => {
+    if (request.readyState === XMLHttpRequest.DONE) {
+      const status = request.status;
+      if (status === 0 || (status >= 200 && status < 400)) {
+        // The request has been completed successfully.
+        var picksJson = JSON.parse(request.responseText);
+        console.log(request.responseText);
+        //document.getElementById("sleeper-iframe").contentWindow.document.body.innerHTML = picksJson;
+        var playersArray = createPlayers(picksJson);
+        finishInit(playersArray);
+      } else {
+        // Oh no! There has been an error with the request!
+        alert("Error loading players with status code: " + status);
+      }
+    }
+  };
+  // Send the request.
+  request.send();
+}
+
+function loadSeasons(year) {
+  //var url = "https://fantasy.espn.com/apis/v3/games/ffl/seasons/2023/segments/0/leagues/945862?view=mMatchupScore";
+  let url = `https://fantasy.espn.com/apis/v3/games/ffl/seasons/${year}/segments/0/leagues/945862?view=mMatchupScore`;
+  console.log(url);
+  const request = new XMLHttpRequest();
+  request.open("GET", url);
+
+  request.onreadystatechange = (e) => {
+    if (request.readyState === XMLHttpRequest.DONE) {
+      const status = request.status;
+      if (status === 0 || (status >= 200 && status < 400)) {
+        // The request has been completed successfully.
+        var picksJson = JSON.parse(request.responseText);
+        console.log(request.responseText);
+        //document.getElementById("sleeper-iframe").contentWindow.document.body.innerHTML = picksJson;
+        var playersArray = createPlayers(picksJson);
+        finishInit(playersArray);
+      } else {
+        // Oh no! There has been an error with the request!
+        alert("Error loading players with status code: " + status);
+      }
+    }
+  };
+  // Send the request.
+  request.send();
+}
+
+</script>
+</head>
+<body onload=init()>
+</body>
+</html>
